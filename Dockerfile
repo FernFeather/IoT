@@ -1,11 +1,20 @@
-# Use the official Jenkins LTS image as the base image
-FROM jenkins/jenkins:lts
+# Extending image
+FROM node:latest
 
-# Switch to root user to perform installation
-USER root
+# Create app directory
+WORKDIR /app
 
-# Update the system and install required packages
-RUN apt-get update
+# Copy Package to Working Directory
+COPY package.json /app
 
-# Install Docker within the container
-RUN curl -sSL https://get.docker.com/ | sh
+# Install Dependencies in Package.json
+RUN npm install
+
+# Copy the rest of the files to the Working Directory
+COPY . /app
+
+# Port to listen on
+EXPOSE 3000
+
+# Main command that will run when the container starts
+CMD ["npm", "run", "start"]
